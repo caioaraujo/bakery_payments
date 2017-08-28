@@ -9,6 +9,10 @@ class TestsUsecase(APITestCase):
     def setUp(self):
         self.BASE_URL = '/branches/'
 
+    # ==================================================================================================================
+    # Post
+    # ==================================================================================================================
+
     def test_post__success(self):
         data = {'name': 'Padaria C'}
         response = self.client.post(self.BASE_URL, data)

@@ -49,11 +49,25 @@ class PaymentService:
 
         return Payment.objects.filter(id=payment_id).first()
 
+    def delete(self, payment_id):
+        payment = Payment.objects.filter(id=payment_id).first()
+
+        self.__validate_exists(payment)
+
+        payment.delete()
+
+        return "Payment deleted successfully!"
+
     def __validate(self, payment):
+
+        self.__validate_exists(payment)
+
+        if payment.is_paid:
+            raise PaymentAlreadyPaidException("Payment was already paid")
+
+    def __validate_exists(self, payment):
 
         if not payment:
             raise PaymentNotFoundException("Payment not found!")
 
-        if payment.is_paid:
-            raise PaymentAlreadyPaidException("Payment was already paid")
 

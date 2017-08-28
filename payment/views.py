@@ -65,3 +65,12 @@ class PaymentId(GenericAPIView):
         serializer = PaymentResponseSerializer(result)
 
         return Response(serializer.data)
+
+    def delete(self, request, **kwargs):
+        """
+        Delete a payment by its ID
+        """
+        payment_id = kwargs.get('pk')
+        result = self.service.delete(payment_id)
+
+        return Response(result)
