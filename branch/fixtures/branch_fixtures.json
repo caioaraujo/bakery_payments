@@ -1,0 +1,16 @@
+[
+  {
+    "model": "branch.Branch",
+    "pk": 1,
+    "fields": {
+      "name": "Padaria A"
+    }
+  },
+  {
+    "model": "branch.Branch",
+    "pk": 2,
+    "fields": {
+      "name": "Padaria B"
+    }
+  }
+]

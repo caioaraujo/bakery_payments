@@ -1,0 +1,7 @@
+# Conjunto de bibliotecas utilizadas no projeto.
+# Instrucao de instalacao: na raiz do projeto, execute "pip3 install -r requirements.txt"
+django
+djangorestframework
+django-rest-swagger
+requests
+webargs

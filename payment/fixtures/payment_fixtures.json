@@ -1,0 +1,22 @@
+[
+  {
+    "model": "payment.Payment",
+    "pk": 1,
+    "fields": {
+      "value": 13000,
+      "expiration_date": "2015-01-01",
+      "branch": 1,
+      "is_paid": false
+    }
+  },
+  {
+    "model": "payment.Payment",
+    "pk": 2,
+    "fields": {
+      "value": 20000,
+      "expiration_date": "2016-01-01",
+      "branch": 1,
+      "is_paid": true
+    }
+  }
+]
