@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from branch.exceptions import LargeNameException, RequiredValueException
 
 
-class TestsUsecase(APITestCase):
+class BranchTestsUsecase(APITestCase):
 
     def setUp(self):
         self.BASE_URL = '/branches/'

@@ -22,4 +22,10 @@ class PaymentResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ('id', 'value', 'expiration_date', 'branch')
+        fields = ('id', 'value', 'expiration_date', 'branch', 'is_paid', 'date_payment')
+
+
+class PaySerializer(serializers.Serializer):
+    """ Pay input data serializer """
+    payment = serializers.IntegerField(help_text="Payment id", required=True)
+    date = serializers.DateField(help_text="Payment date", required=True)

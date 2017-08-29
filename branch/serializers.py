@@ -13,7 +13,7 @@ class BranchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Branch
-        fields = ('name', 'current_balance')
+        fields = ('name', 'current_balance', 'previous_balance')
 
 
 class BranchResponseSerializer(serializers.ModelSerializer):

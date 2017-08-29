@@ -3,7 +3,7 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from payment.filters import PaymentFilterBackend
-from payment.serializers import PaymentSerializer, PaymentResponseSerializer
+from payment.serializers import PaymentSerializer, PaymentResponseSerializer, PaySerializer
 from payment.services import PaymentService
 
 
@@ -79,3 +79,17 @@ class PaymentId(GenericAPIView):
 
 class DoPay(GenericAPIView):
     """ Pay a payment """
+    serializer_class = PaySerializer
+
+    def __init__(self):
+        self.service = PaymentService()
+
+    def post(self, request):
+        """
+        Record a pay and updates the branch's balance.
+        """
+        request_data = request.data
+        data = self.service.do_pay(request_data)
+        serializer = PaymentResponseSerializer(data)
+
+        return Response(serializer.data)

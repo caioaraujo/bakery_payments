@@ -19,9 +19,10 @@ class BranchService:
     def update_balance(self, branch_id, payment_value):
         """ Updates the branch balance for the given payment value """
         branch = Branch.objects.get(id=branch_id)
-        branch.balance -= payment_value
+        branch.previous_balance = branch.current_balance
+        branch.current_balance -= payment_value
 
-        branch.save(update_fields=['balance',])
+        branch.save(update_fields=['current_balance', 'previous_balance'])
 
     def __validation(self, branch):
 
