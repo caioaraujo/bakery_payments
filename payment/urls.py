@@ -6,4 +6,5 @@ from payment import views
 urlpatterns = [
     url(r'^$', views.Payment.as_view()),
     url(r'^(?P<pk>\d+)$', views.PaymentId.as_view()),
+    url(r'pay$', views.DoPay.as_view())
 ]

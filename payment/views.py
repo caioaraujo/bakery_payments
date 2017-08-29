@@ -38,6 +38,7 @@ class Payment(GenericAPIView):
     def get_queryset(self):
         pass
 
+
 class PaymentId(GenericAPIView):
     serializer_class = PaymentSerializer
 
@@ -74,3 +75,7 @@ class PaymentId(GenericAPIView):
         result = self.service.delete(payment_id)
 
         return Response(result)
+
+
+class DoPay(GenericAPIView):
+    """ Pay a payment """

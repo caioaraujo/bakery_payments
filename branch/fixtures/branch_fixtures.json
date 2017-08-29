@@ -3,14 +3,16 @@
     "model": "branch.Branch",
     "pk": 1,
     "fields": {
-      "name": "Padaria A"
+      "name": "Padaria A",
+      "current_balance": 130000
     }
   },
   {
     "model": "branch.Branch",
     "pk": 2,
     "fields": {
-      "name": "Padaria B"
+      "name": "Padaria B",
+      "current_balance": 90000
     }
   }
 ]

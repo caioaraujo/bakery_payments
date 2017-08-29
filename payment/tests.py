@@ -1,7 +1,8 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from payment.exceptions import PaymentAlreadyPaidException, PaymentNotFoundException
+from payment.exceptions import PaymentAlreadyPaidException, PaymentNotFoundException, BranchNotFoundException, \
+    RequiredValueException
 
 
 class TestsUsecase(APITestCase):
@@ -21,7 +22,23 @@ class TestsUsecase(APITestCase):
         data = {'value': 12000, 'expiration_date': '2018-01-01', 'branch': 1}
         response = self.client.post(self.BASE_URL, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data.get('id') > 0)
+        result = response.data
+        self.assertTrue(result.get('id') > 0)
+
+    def test_post__branch_not_found(self):
+        data = {'value': 12000, 'expiration_date': '2018-01-01', 'branch': 99}
+        with self.assertRaises(BranchNotFoundException) as e:
+            self.client.post(self.BASE_URL, data)
+            self.assertEqual("Branch 99 not found in database", e.msg)
+
+    def test_post__required_fields(self):
+        data1 = {'value': 12000}
+        data2 = {'expiration_date': '2018-01-01'}
+        data3 = {'branch': 1}
+        with self.assertRaises(RequiredValueException):
+            self.client.post(self.BASE_URL, data1)
+            self.client.post(self.BASE_URL, data2)
+            self.client.post(self.BASE_URL, data3)
 
     # ==================================================================================================================
     # Put
@@ -36,12 +53,12 @@ class TestsUsecase(APITestCase):
     def test_put__payment_was_paid(self):
         data = {'value': 10000}
         with self.assertRaises(PaymentAlreadyPaidException):
-            response = self.client.put(self.BASE_URL + '2', data)
+            self.client.put(self.BASE_URL + '2', data)
 
     def test_put__payment_not_found(self):
         data = {'value': 10000}
         with self.assertRaises(PaymentNotFoundException):
-            response = self.client.put(self.BASE_URL + '99', data)
+            self.client.put(self.BASE_URL + '99', data)
 
     # ==================================================================================================================
     # Delete

@@ -1,17 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from payment.exceptions import PaymentNotFoundException, PaymentAlreadyPaidException
+from django.db import transaction
+
+from branch.models import Branch
+from branch.services import BranchService
+from payment.exceptions import PaymentNotFoundException, PaymentAlreadyPaidException, RequiredValueException, \
+    BranchNotFoundException
 from payment.models import Payment
 
 
 class PaymentService:
 
     def insert(self, request_data):
+        """ Record a new payment """
+
         payment = Payment()
 
         payment.expiration_date = request_data.get('expiration_date')
         payment.value = request_data.get('value')
         payment.branch_id = request_data.get('branch')
+
+        self.__validate_insert(payment)
 
         payment.save()
 
@@ -26,7 +35,7 @@ class PaymentService:
     def update(self, payment_id, request_data):
         payment = Payment.objects.filter(id=payment_id).first()
 
-        self.__validate(payment)
+        self.__validate_update(payment)
 
         expiration_date = request_data.get('expiration_date')
         value = request_data.get('value')
@@ -58,7 +67,39 @@ class PaymentService:
 
         return "Payment deleted successfully!"
 
-    def __validate(self, payment):
+    @transaction.atomic
+    def do_pay(self, payment_id):
+        """ Pay a payment and updates the branch balance """
+        payment = Payment.objects.filter(id=payment_id).first()
+
+        self.__validate_exists(payment)
+
+        # Updates the branch balance before persist the payment
+        self.__update_branch_balance(payment)
+
+    def __update_branch_balance(self, payment):
+        branch_service = BranchService()
+        branch_service.update_balance(payment.branch_id, payment.value)
+
+    def __validate_insert(self, payment):
+        branch_id = payment.branch_id
+
+        if not branch_id:
+            raise RequiredValueException("Branch ID is required")
+
+        if not payment.value:
+            raise RequiredValueException("Payment value is required")
+
+        if not payment.expiration_date:
+            raise RequiredValueException("Expiration date value is required")
+
+        # Validate the branch
+        branch = Branch.objects.filter(id=branch_id).first()
+
+        if not branch:
+            raise BranchNotFoundException("Branch %s not found in database" % branch_id)
+
+    def __validate_update(self, payment):
 
         self.__validate_exists(payment)
 
