@@ -107,3 +107,8 @@ class PayTestsUsecase(APITestCase):
         with self.assertRaises(RequiredValueException):
             self.client.post(self.BASE_URL, data)
 
+    def test_post__payment_is_already_paid(self):
+        data = {'payment': 2, 'date': '2015-02-01'}
+        with self.assertRaises(PaymentAlreadyPaidException):
+            self.client.post(self.BASE_URL, data)
+
